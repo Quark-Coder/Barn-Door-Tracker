@@ -43,15 +43,15 @@ void loop() {
   isRewinding = digitalRead(REWIND); 
   isRewindingEnded = digitalRead(END_SWITCH); 
 
-    if(isSpeedX2 == HIGH) {
-    speed_x2 = true;
-    digitalWrite(DIR, HIGH); 
+  if(isSpeedX2 == HIGH) {
+  speed_x2 = true;
+  digitalWrite(DIR, HIGH); 
   } else {
     speed_x2 = false;
     digitalWrite(DIR, LOW); 
   }
 
-   if(isEnable == HIGH ) {
+  if(isEnable == HIGH ) {
     enable = true;
   } else {
     enable = false;
@@ -62,10 +62,12 @@ void loop() {
     speed_x2 = false;
     enable = false;
   }
-  if(rewinding == true){
+  
+  if(rewinding == true) {
     digitalWrite(DIR, HIGH);
     Speed = 200;
   } 
+  
   if((isRewindingEnded == HIGH) && (rewinding == true)) {
     digitalWrite(DIR, LOW);
     Speed = 37500;
@@ -73,19 +75,19 @@ void loop() {
   }
 
   if(enable == true) {
-      digitalWrite(EN_LED, HIGH);
-      digitalWrite(EN, LOW);
+	digitalWrite(EN_LED, HIGH);
+    digitalWrite(EN, LOW);
   } else if((enable == false) && (rewinding == false)) {
-      digitalWrite(EN_LED, LOW);
-      digitalWrite(EN, HIGH);
+	digitalWrite(EN_LED, LOW);
+	digitalWrite(EN, HIGH);
   }
 
   if(speed_x2 == true) {
     digitalWrite(doubleSpeed_LED, HIGH);
     Speed = 37500 / 2;
   } else if((speed_x2 == false) && (rewinding == false)) {
-    digitalWrite(doubleSpeed_LED, LOW);
-    Speed = 37500;
+	digitalWrite(doubleSpeed_LED, LOW);
+	Speed = 37500;
   }
   
   if(micros() > NextTime) {     

@@ -18,15 +18,8 @@ bool rewinding = false;
 bool enable = false;
 bool speed_x2 = false;
 
-//  stepper = 200 steps/revolution  
-//  driver  = 8 micro steps  depends on you driver board settings
-//  Total   = 200*8= 1600 steps/revolution 
-//  1rpm = 1600/60sec = 26.666steps  per sec
-//  period   1/x = 0.0375sec
-//  = 37500 in microsec 
-
 unsigned long Speed = 37500;  //  Ajust for proper speed in your setup
-unsigned long NextTime = 0;   //  Timing register             
+unsigned long NextTime = 0;     
 
 void setup() {
   
@@ -42,8 +35,6 @@ void setup() {
   pinMode(SPEED_BTN, INPUT);
   
   Serial.begin(115200);
-
-  
 }
 
 void loop() {
@@ -66,24 +57,16 @@ void loop() {
     enable = false;
   }
 
-  
-
   if(isRewinding == HIGH) {
-    Serial.println("Rewinding pressed.");
     rewinding = true;
     speed_x2 = false;
     enable = false;
   }
   if(rewinding == true){
-    
-    Serial.print("Speed: ");
-    Serial.println(Speed);
-    
     digitalWrite(DIR, HIGH);
     Speed = 200;
   } 
   if((isRewindingEnded == HIGH) && (rewinding == true)) {
-    Serial.println("Rewinding released.");
     digitalWrite(DIR, LOW);
     Speed = 37500;
     rewinding = false;
@@ -100,18 +83,17 @@ void loop() {
   if(speed_x2 == true) {
     digitalWrite(doubleSpeed_LED, HIGH);
     Speed = 37500 / 2;
-    //Speed = 1000;
   } else if((speed_x2 == false) && (rewinding == false)) {
     digitalWrite(doubleSpeed_LED, LOW);
     Speed = 37500;
   }
-
   
   if(micros() > NextTime) {     
     digitalWrite(STEP, HIGH);  
     NextTime += Speed;         
     PulseStatus=1;                 
   }
+  
   if( PulseStatus & micros() > NextTime - (Speed/2)) {   
     digitalWrite(STEP, LOW);
     PulseStatus=0;              
